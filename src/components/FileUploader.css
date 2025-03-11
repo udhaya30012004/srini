@@ -1,0 +1,24 @@
+.file-uploader {
+    display: inline-block;
+  }
+  
+  .upload-btn {
+    display: flex;
+    align-items: center;
+    background-color: white;
+    color: black;
+    padding: 8px 12px;
+    border-radius: 5px;
+    font-size: 14px;
+    transition: background-color 0.3s;
+  }
+  
+  .upload-btn:hover {
+    background-color: #f0f0f0;
+  }
+  
+  .plus-icon {
+    font-size: 18px;
+    margin-right: 5px;
+    font-weight: bold;
+  }

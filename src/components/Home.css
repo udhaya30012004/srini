@@ -1,0 +1,86 @@
+.home-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 20px;
+    text-align: center;
+  }
+  
+  .hero-section {
+    margin-bottom: 50px;
+  }
+  
+  .hero-section h1 {
+    font-size: 32px;
+    margin-bottom: 10px;
+  }
+  
+  .hero-section h2 {
+    font-size: 24px;
+    color: #333;
+    margin-bottom: 20px;
+  }
+  
+  .description {
+    max-width: 800px;
+    margin: 0 auto;
+    font-size: 16px;
+    line-height: 1.6;
+    color: #555;
+  }
+  
+  .analyzer-section {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  
+  .text-input-container {
+    background-color: #ddd;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 20px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .contract-text-area {
+    width: 100%;
+    height: 200px;
+    padding: 15px;
+    border: none;
+    background-color: #ddd;
+    font-size: 16px;
+    resize: none;
+    border-radius: 5px;
+  }
+  
+  .contract-text-area::placeholder {
+    color: #777;
+    font-size: 18px;
+    text-align: center;
+    padding-top: 70px;
+  }
+  
+  .upload-container {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+  }
+  
+  .submit-btn {
+    background-color: #000;
+    color: white;
+    padding: 12px 40px;
+    font-size: 18px;
+    border-radius: 25px;
+    transition: background-color 0.3s;
+  }
+  
+  .submit-btn:hover {
+    background-color: #333;
+  }
+  
+  .submit-btn:disabled {
+    background-color: #777;
+    cursor: not-allowed;
+  }
