@@ -1,20 +1,24 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import FileUploader from './FileUploader';
+import { analyzeContractText } from '../services/api';
 import './Home.css';
 
 function Home({ onAnalyze }) {
   const [contractText, setContractText] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
 
   const handleTextChange = (e) => {
     setContractText(e.target.value);
   };
 
-  const handleFileUpload = (text) => {
-    setContractText(text);
+  const handleFileUpload = (analysisResult) => {
+    onAnalyze(analysisResult);
+    navigate('/dashboard');
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!contractText.trim()) {
       alert('Please enter contract text or upload a file');
       return;
@@ -22,29 +26,16 @@ function Home({ onAnalyze }) {
 
     setIsLoading(true);
 
-    // Simulate API call for contract analysis
-    setTimeout(() => {
-      const analysis = {
-        id: Date.now(),
-        text: contractText,
-        riskLevel: Math.floor(Math.random() * 100),
-        risks: [
-          { id: 1, type: 'Liability Clause', severity: 'High', description: 'Unlimited liability exposure detected' },
-          { id: 2, type: 'Payment Terms', severity: 'Medium', description: 'Vague payment schedule' },
-          { id: 3, type: 'Termination Clause', severity: 'Low', description: 'Missing early termination details' }
-        ],
-        compliance: {
-          gdpr: Math.random() > 0.5,
-          hipaa: Math.random() > 0.5,
-          pci: Math.random() > 0.5
-        }
-      };
-
-      onAnalyze(analysis);
+    try {
+      const analysisResult = await analyzeContractText(contractText);
+      onAnalyze(analysisResult);
       setIsLoading(false);
       setContractText('');
-      alert('Contract analyzed successfully! View results in Dashboard.');
-    }, 2000);
+      navigate('/dashboard');
+    } catch (error) {
+      setIsLoading(false);
+      alert('Error analyzing the contract. Please try again.');
+    }
   };
 
   return (

@@ -29,7 +29,7 @@ function App() {
         <NavBar isLoggedIn={isLoggedIn} onLogout={handleLogout} />
         <Routes>
           <Route path="/" element={<Home onAnalyze={handleContractAnalysis} />} />
-          <Route path="/dashboard" element={<Dashboard contracts={analyzedContracts} />} />
+          <Route path="/dashboard" element={<Dashboard contracts={analyzedContracts || []} />} />
           <Route path="/signin" element={<SignIn onLogin={handleLogin} />} />
           <Route path="/signup" element={<SignUp />} />
         </Routes>

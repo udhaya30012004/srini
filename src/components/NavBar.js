@@ -6,7 +6,7 @@ function NavBar({ isLoggedIn, onLogout }) {
   return (
     <nav className="navbar">
       <div className="navbar-left">
-        <Link to="/" className="brand">CRA</Link>
+        <Link to="/" className="brand">CRAACC</Link>
         <Link to="/dashboard" className="nav-link">Dashboard</Link>
         <Link to="/privacy" className="nav-link">Privacy Policy</Link>
       </div>

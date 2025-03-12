@@ -1,10 +1,54 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import RiskCard from './RiskCard';
+import OpportunityCard from './OpportunityCard';
+import KeyClauseCard from './KeyClauseCard';
 import ComplianceCard from './ComplianceCard';
 import './Dashboard.css';
 
-function Dashboard({ contracts }) {
-  if (contracts.length === 0) {
+function Dashboard() {
+  const [contracts, setContracts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchContracts = async () => {
+      try {
+        const response = await fetch('http://localhost:8080/api/contracts');
+        if (!response.ok) {
+          throw new Error('Failed to fetch contracts');
+        }
+        const data = await response.json();
+        setContracts(data);
+      } catch (error) {
+        setError(error.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchContracts();
+  }, []);
+
+  const safeContracts = contracts || [];
+
+  if (loading) {
+    return (
+      <div className="dashboard-container">
+        <h1>Loading...</h1>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="dashboard-container">
+        <h1>Error</h1>
+        <p>{error}</p>
+      </div>
+    );
+  }
+
+  if (safeContracts.length === 0) {
     return (
       <div className="dashboard-container empty-dashboard">
         <h1>Dashboard</h1>
@@ -13,8 +57,7 @@ function Dashboard({ contracts }) {
     );
   }
 
-  // Use the most recently analyzed contract
-  const latestContract = contracts[contracts.length - 1];
+  const latestContract = safeContracts[safeContracts.length - 1];
 
   return (
     <div className="dashboard-container">
@@ -31,6 +74,18 @@ function Dashboard({ contracts }) {
           </div>
           <p className="risk-percentage">{latestContract.riskLevel}%</p>
           <p className="risk-label">{getRiskLabel(latestContract.riskLevel)}</p>
+        </div>
+        
+        <div className="summary-card">
+          <h3>Opportunity Level</h3>
+          <div className="opportunity-meter">
+            <div 
+              className="opportunity-indicator" 
+              style={{ width: `${latestContract.opportunityLevel}%`, backgroundColor: getOpportunityColor(latestContract.opportunityLevel) }}
+            ></div>
+          </div>
+          <p className="opportunity-percentage">{latestContract.opportunityLevel}%</p>
+          <p className="opportunity-label">{getOpportunityLabel(latestContract.opportunityLevel)}</p>
         </div>
         
         <div className="summary-card">
@@ -62,6 +117,20 @@ function Dashboard({ contracts }) {
           ))}
         </div>
 
+        <div className="opportunities-section">
+          <h2>Opportunities</h2>
+          {latestContract.opportunities.map(opportunity => (
+            <OpportunityCard key={opportunity.id} opportunity={opportunity} />
+          ))}
+        </div>
+
+        <div className="key-clauses-section">
+          <h2>Key Clauses</h2>
+          {latestContract.keyClauses.map(keyClause => (
+            <KeyClauseCard key={keyClause.id} keyClause={keyClause} />
+          ))}
+        </div>
+
         <div className="compliance-section">
           <h2>Compliance Details</h2>
           <ComplianceCard compliance={latestContract.compliance} />
@@ -81,6 +150,18 @@ function getRiskLabel(level) {
   if (level < 30) return 'Low Risk';
   if (level < 70) return 'Medium Risk';
   return 'High Risk';
+}
+
+function getOpportunityColor(level) {
+  if (level < 30) return '#F44336'; // Red for low opportunity
+  if (level < 70) return '#FFC107'; // Yellow for medium opportunity
+  return '#4CAF50'; // Green for high opportunity
+}
+
+function getOpportunityLabel(level) {
+  if (level < 30) return 'Low Opportunity';
+  if (level < 70) return 'Medium Opportunity';
+  return 'High Opportunity';
 }
 
 export default Dashboard;

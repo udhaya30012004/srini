@@ -1,4 +1,5 @@
 import React, { useRef } from 'react';
+import { uploadContractPdf } from '../services/api';
 import './FileUploader.css';
 
 function FileUploader({ onFileLoad }) {
@@ -8,7 +9,7 @@ function FileUploader({ onFileLoad }) {
     fileInputRef.current.click();
   };
 
-  const handleFileChange = (e) => {
+  const handleFileChange = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
 
@@ -17,19 +18,12 @@ function FileUploader({ onFileLoad }) {
       return;
     }
 
-    // In a real application, you would use a PDF parsing library
-    // For this example, we'll simulate reading the file
-    const reader = new FileReader();
-    reader.onload = (event) => {
-      // In a real app, you'd use a PDF.js or similar library to extract text
-      // For now, we'll just simulate extracted text
-      const simulatedExtractedText = `Contract Agreement between parties A and B.
-      This is a simulated text extracted from ${file.name}.
-      For demonstration purposes only.`;
-      
-      onFileLoad(simulatedExtractedText);
-    };
-    reader.readAsText(file);
+    try {
+      const analysisResult = await uploadContractPdf(file);
+      onFileLoad(analysisResult);
+    } catch (error) {
+      alert('Error processing the PDF. Please try again.');
+    }
   };
 
   return (
